@@ -11,8 +11,10 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.practico1lab3.model.Usuario;
 import com.example.practico1lab3.request.ApiClient;
+import com.example.practico1lab3.request.ApiClientConOStream;
 import com.example.practico1lab3.ui.RegistroActivity;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class MainActivityViewModel extends AndroidViewModel {
@@ -31,12 +33,15 @@ private Context context;
     }
 
     public void logear(String mail, String pass){
-       Usuario usuario = ApiClient.leer(context);
+       //Usuario usuario = ApiClient.leer(context);
 
-       Intent intent = new Intent(context, RegistroActivity.class);
-       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        File archivo = new File(context.getFilesDir(),"usuario.dat");
+        Usuario usuario = ApiClientConOStream.leer(archivo);
 
-       if(mail.equals(usuario.getMail()) && pass.equals(usuario.getPass())){
+        Intent intent = new Intent(context, RegistroActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        if(mail.equals(usuario.getMail()) && pass.equals(usuario.getPass())){
            intent.putExtra("perfil",true);
            context.startActivity(intent);
        }
